@@ -1,16 +1,22 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
 import { Button } from '@/components/ui/button.jsx'
-import { ArrowRight, CheckCircle, TrendingUp, Users, Zap, Star, Monitor, Database, BarChart3, Settings, Code, Cpu, Network, Server, Wifi } from 'lucide-react'
+import { ArrowRight, CheckCircle, TrendingUp, Users, Zap, Star, Monitor, Database, BarChart3, Settings, Code, Cpu, Network, Server, Wifi, DollarSign, Calendar, Phone, Mail, MessageSquare, Activity, Target, Briefcase, Award, Shield, Clock, Globe } from 'lucide-react'
 import './App.css'
 
 function App() {
   const [loading, setLoading] = useState(true)
   const [loadingProgress, setLoadingProgress] = useState(0)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const { scrollY } = useScroll()
-  const y1 = useTransform(scrollY, [0, 300], [0, -50])
-  const y2 = useTransform(scrollY, [0, 300], [0, -100])
-  const y3 = useTransform(scrollY, [0, 300], [0, -150])
+  const y1 = useTransform(scrollY, [0, 1000], [0, -200])
+  const y2 = useTransform(scrollY, [0, 1000], [0, -400])
+  const y3 = useTransform(scrollY, [0, 1000], [0, -600])
+  
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const springX = useSpring(mouseX, { stiffness: 100, damping: 30 })
+  const springY = useSpring(mouseY, { stiffness: 100, damping: 30 })
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -20,16 +26,28 @@ function App() {
           setTimeout(() => setLoading(false), 500)
           return 100
         }
-        return prev + 2
+        return prev + 3
       })
     }, 50)
 
     return () => clearInterval(timer)
   }, [])
 
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const { clientX, clientY } = e
+      setMousePosition({ x: clientX, y: clientY })
+      mouseX.set(clientX)
+      mouseY.set(clientY)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [mouseX, mouseY])
+
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-stone-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -37,21 +55,31 @@ function App() {
             transition={{ duration: 0.5 }}
             className="mb-8"
           >
-            <div className="flex items-center justify-center mb-4">
-              <Monitor className="w-12 h-12 text-blue-600 mr-3" />
-              <h1 className="text-6xl font-bold text-stone-900">
-                Denti<span className="text-blue-600">cor</span>
-              </h1>
+            <div className="flex items-center justify-center mb-6">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl">
+                  <Database className="w-10 h-10 text-white" />
+                </div>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="absolute -inset-2 border-2 border-blue-400/30 rounded-3xl"
+                />
+              </div>
             </div>
-            <div className="w-64 h-2 bg-stone-200 rounded-full mx-auto">
+            <h1 className="text-5xl font-bold text-white mb-4">
+              Denti<span className="text-blue-400">cor</span>
+            </h1>
+            <p className="text-blue-200 mb-6">Initializing Revenue Stack Technology</p>
+            <div className="w-80 h-3 bg-slate-800 rounded-full mx-auto overflow-hidden">
               <motion.div
-                className="h-full bg-blue-600 rounded-full"
+                className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${loadingProgress}%` }}
                 transition={{ duration: 0.1 }}
               />
             </div>
-            <p className="text-stone-600 mt-4">{loadingProgress}%</p>
+            <p className="text-blue-300 mt-4 font-mono">{loadingProgress}% Complete</p>
           </motion.div>
         </div>
       </div>
@@ -59,447 +87,480 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-slate-900 overflow-x-hidden">
+      {/* Animated Background */}
+      <div className="fixed inset-0 z-0">
+        {/* 3D Wave Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+          {/* Animated Grid */}
+          <div className="absolute inset-0 opacity-20">
+            <motion.div
+              style={{ y: y1 }}
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+                `,
+                backgroundSize: '60px 60px'
+              }}
+            />
+          </div>
+
+          {/* Floating Particles */}
+          {[...Array(50)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-blue-400/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -100, 0],
+                opacity: [0.3, 1, 0.3],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+
+          {/* 3D Wave Effect */}
+          <motion.div
+            style={{ y: y2 }}
+            className="absolute bottom-0 left-0 right-0 h-96 opacity-30"
+          >
+            <svg viewBox="0 0 1200 320" className="w-full h-full">
+              <defs>
+                <linearGradient id="wave-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.8"/>
+                  <stop offset="50%" stopColor="#8B5CF6" stopOpacity="0.6"/>
+                  <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.4"/>
+                </linearGradient>
+              </defs>
+              <motion.path
+                d="M0,160 C300,100 600,220 1200,160 L1200,320 L0,320 Z"
+                fill="url(#wave-gradient)"
+                animate={{
+                  d: [
+                    "M0,160 C300,100 600,220 1200,160 L1200,320 L0,320 Z",
+                    "M0,140 C300,200 600,80 1200,140 L1200,320 L0,320 Z",
+                    "M0,160 C300,100 600,220 1200,160 L1200,320 L0,320 Z"
+                  ]
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </svg>
+          </motion.div>
+        </div>
+      </div>
+
       {/* Navigation */}
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="fixed top-0 w-full z-50 bg-stone-50/80 backdrop-blur-sm border-b border-stone-200"
+        className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50"
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <Database className="w-8 h-8 text-blue-600 mr-3" />
-            <div className="text-2xl font-bold text-stone-900">
-              Denti<span className="text-blue-600">cor</span>
+            <div className="relative mr-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Database className="w-6 h-6 text-white" />
+              </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur opacity-30"></div>
+            </div>
+            <div className="text-2xl font-bold text-white">
+              Denti<span className="text-blue-400">cor</span>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <span className="text-stone-600">New York | 11:54 am</span>
-            <Button variant="outline" className="border-stone-300 hover:bg-stone-100">
-              Contact
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#" className="text-slate-300 hover:text-white transition-colors">Use Cases</a>
+            <a href="#" className="text-slate-300 hover:text-white transition-colors">Features</a>
+            <a href="#" className="text-slate-300 hover:text-white transition-colors">About</a>
+            <Button className="bg-white text-slate-900 hover:bg-slate-100">
+              Learn More <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
         </div>
       </motion.nav>
 
-      {/* Parallax Hero Section */}
-      <section className="relative h-screen overflow-hidden">
-        {/* Parallax Background Elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
-          {/* Tech Grid Background */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `
-                linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
-              `,
-              backgroundSize: '50px 50px'
-            }} />
-          </div>
-
-          {/* Floating Tech Elements */}
-          <motion.div style={{ y: y1 }} className="absolute top-20 left-20">
-            <div className="w-16 h-16 bg-blue-500/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-blue-400/30">
-              <Cpu className="w-8 h-8 text-blue-300" />
-            </div>
-          </motion.div>
-
-          <motion.div style={{ y: y2 }} className="absolute top-40 right-32">
-            <div className="w-20 h-20 bg-purple-500/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-purple-400/30">
-              <BarChart3 className="w-10 h-10 text-purple-300" />
-            </div>
-          </motion.div>
-
-          <motion.div style={{ y: y3 }} className="absolute bottom-40 left-32">
-            <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-green-400/30">
-              <Network className="w-6 h-6 text-green-300" />
-            </div>
-          </motion.div>
-
-          <motion.div style={{ y: y1 }} className="absolute top-60 right-20">
-            <div className="w-14 h-14 bg-orange-500/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-orange-400/30">
-              <Server className="w-7 h-7 text-orange-300" />
-            </div>
-          </motion.div>
-
-          <motion.div style={{ y: y2 }} className="absolute bottom-60 right-40">
-            <div className="w-18 h-18 bg-cyan-500/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-cyan-400/30">
-              <Database className="w-9 h-9 text-cyan-300" />
-            </div>
-          </motion.div>
-
-          {/* Circuit Lines */}
-          <motion.div style={{ y: y3 }} className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-400/50 to-transparent" />
-          <motion.div style={{ y: y1 }} className="absolute top-2/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400/50 to-transparent" />
-        </div>
-
-        {/* Hero Content */}
-        <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
+      {/* Hero Section with 3D Dashboard */}
+      <section className="relative min-h-screen flex items-center justify-center pt-20 z-10">
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
           <motion.div
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            initial={{ x: -100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="max-w-5xl mx-auto"
+            className="text-center lg:text-left"
           >
-            {/* Main Tech Icon */}
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="mb-8"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="inline-flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-full px-4 py-2 mb-8"
             >
-              <div className="w-32 h-32 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl backdrop-blur-sm border border-white/20">
-                <Cpu className="w-16 h-16 text-white" />
-              </div>
+              <Zap className="w-4 h-4 text-blue-400" />
+              <span className="text-sm text-slate-300">Now with AI Revenue Optimization</span>
             </motion.div>
 
-            <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 leading-tight">
-              Revenue
+            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+              Turn Visitors
               <br />
-              <span className="text-blue-400">Stack</span>
-              <br />
-              Technology
+              Into <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Patients.</span>
             </h1>
             
-            <p className="text-2xl text-blue-100 max-w-3xl mx-auto mb-8">
-              AI-Powered Revenue Optimization Platform for Dental Practices
-            </p>
-            
-            <p className="text-lg text-white/80 max-w-4xl mx-auto mb-12">
-              We deploy enterprise-grade technology systems that automatically convert website visitors into booked consultations and optimize your practice revenue through advanced AI and machine learning algorithms.
+            <p className="text-xl text-slate-300 mb-8 max-w-2xl">
+              Deploy enterprise-grade AI systems that automatically convert website traffic into booked consultations and optimize your practice revenue — powered by cutting-edge technology.
             </p>
 
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            >
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg shadow-2xl">
-                <Monitor className="mr-2 h-5 w-5" />
-                Deploy Your Revenue Stack
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg shadow-2xl">
+                <Database className="mr-2 h-5 w-5" />
+                Deploy Revenue Stack
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <p className="text-sm text-blue-200">
-                Performance-based technology • 30% revenue increase guaranteed
-              </p>
+              <Button size="lg" variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-4 text-lg">
+                <Activity className="mr-2 h-5 w-5" />
+                See It in Action
+              </Button>
+            </div>
+
+            <div className="text-sm text-slate-400">
+              Performance-based technology • 30% revenue increase guaranteed
+            </div>
+          </motion.div>
+
+          {/* Right Dashboard */}
+          <motion.div
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="relative"
+          >
+            {/* 3D Dashboard Container */}
+            <div className="relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl">
+              {/* Dashboard Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <BarChart3 className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold">Revenue Dashboard</h3>
+                    <p className="text-slate-400 text-sm">Manhattan Dental Practice</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <span className="text-green-400 text-sm">Live</span>
+                </div>
+              </div>
+
+              {/* Revenue Metrics */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <motion.div
+                  animate={{ scale: [1, 1.02, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <DollarSign className="w-4 h-4 text-blue-400" />
+                    <span className="text-slate-300 text-sm">Monthly Revenue</span>
+                  </div>
+                  <div className="text-2xl font-bold text-white">$47,632</div>
+                  <div className="text-green-400 text-sm">+34.5% ↗</div>
+                </motion.div>
+
+                <motion.div
+                  animate={{ scale: [1, 1.02, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                  className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Calendar className="w-4 h-4 text-purple-400" />
+                    <span className="text-slate-300 text-sm">New Patients</span>
+                  </div>
+                  <div className="text-2xl font-bold text-white">127</div>
+                  <div className="text-green-400 text-sm">+28.3% ↗</div>
+                </motion.div>
+
+                <motion.div
+                  animate={{ scale: [1, 1.02, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                  className="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Target className="w-4 h-4 text-green-400" />
+                    <span className="text-slate-300 text-sm">Conversion Rate</span>
+                  </div>
+                  <div className="text-2xl font-bold text-white">8.7%</div>
+                  <div className="text-green-400 text-sm">+45.2% ↗</div>
+                </motion.div>
+
+                <motion.div
+                  animate={{ scale: [1, 1.02, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
+                  className="bg-gradient-to-br from-orange-500/20 to-orange-600/20 border border-orange-500/30 rounded-xl p-4"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Phone className="w-4 h-4 text-orange-400" />
+                    <span className="text-slate-300 text-sm">Consultations</span>
+                  </div>
+                  <div className="text-2xl font-bold text-white">89</div>
+                  <div className="text-green-400 text-sm">+52.1% ↗</div>
+                </motion.div>
+              </div>
+
+              {/* Live Chart */}
+              <div className="bg-slate-800/50 rounded-xl p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-white font-medium">Revenue Growth</h4>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                      <span className="text-slate-400 text-xs">AI Optimized</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                      <span className="text-slate-400 text-xs">Previous Period</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Animated Chart */}
+                <div className="h-32 flex items-end justify-between gap-1">
+                  {[40, 65, 45, 80, 60, 95, 75, 110, 85, 120, 100, 135].map((height, i) => (
+                    <motion.div
+                      key={i}
+                      className="bg-gradient-to-t from-blue-500 to-purple-600 rounded-t-sm flex-1"
+                      initial={{ height: 0 }}
+                      animate={{ height: `${height}px` }}
+                      transition={{ duration: 1, delay: i * 0.1 }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* AI Status */}
+              <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Cpu className="w-4 h-4 text-blue-400" />
+                  <span className="text-slate-300 text-sm">AI Engine Active</span>
+                </div>
+                <div className="text-green-400 text-sm">Optimizing Revenue 24/7</div>
+              </div>
+            </div>
+
+            {/* Floating Elements */}
+            <motion.div
+              style={{ x: springX, y: springY }}
+              className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            >
+              <Database className="w-8 h-8 text-white" />
+            </motion.div>
+
+            <motion.div
+              style={{ x: springX, y: springY }}
+              className="absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center shadow-2xl"
+              animate={{ rotate: -360 }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            >
+              <TrendingUp className="w-6 h-6 text-white" />
             </motion.div>
           </motion.div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center"
-          >
-            <div className="w-1 h-3 bg-white/50 rounded-full mt-2" />
-          </motion.div>
-        </motion.div>
       </section>
 
-      {/* Mission Statement Section */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Mission Statement */}
+      <section className="relative py-20 z-10">
+        <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-12"
           >
             <div className="flex items-center justify-center mb-8">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                <Zap className="w-8 h-8 text-blue-600" />
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4">
+                <Zap className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-4xl font-bold text-stone-900">Our Mission</h2>
+              <h2 className="text-4xl font-bold text-white">Our Mission</h2>
             </div>
             
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-3xl p-12 mb-8">
-              <blockquote className="text-2xl font-medium text-stone-800 leading-relaxed mb-6">
-                "To revolutionize dental practice revenue optimization through cutting-edge AI technology, making enterprise-grade revenue systems accessible to every practice while delivering guaranteed, measurable results."
-              </blockquote>
-              <p className="text-lg text-stone-600 leading-relaxed">
-                We believe that every dental practice deserves access to the same advanced technology that Fortune 500 companies use to optimize their revenue streams. Our mission is to democratize AI-powered revenue optimization, ensuring that practice owners can focus on patient care while our technology handles the complexities of patient acquisition, conversion, and retention.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              <div className="p-6">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="w-6 h-6 text-blue-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-stone-900 mb-2">Measurable Results</h3>
-                <p className="text-stone-600">Every system we deploy comes with guaranteed performance metrics and transparent ROI tracking.</p>
-              </div>
-              
-              <div className="p-6">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Cpu className="w-6 h-6 text-purple-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-stone-900 mb-2">Advanced Technology</h3>
-                <p className="text-stone-600">Enterprise-grade AI and machine learning systems tailored specifically for dental practice needs.</p>
-              </div>
-              
-              <div className="p-6">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-6 h-6 text-green-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-stone-900 mb-2">Practice-Focused</h3>
-                <p className="text-stone-600">Built by technologists who understand the unique challenges and opportunities in dental practice management.</p>
-              </div>
-            </div>
+            <blockquote className="text-2xl font-medium text-slate-200 leading-relaxed mb-8">
+              "To revolutionize dental practice revenue optimization through cutting-edge AI technology, making enterprise-grade revenue systems accessible to every practice while delivering guaranteed, measurable results."
+            </blockquote>
+            
+            <p className="text-lg text-slate-300 leading-relaxed max-w-3xl mx-auto">
+              We believe that every dental practice deserves access to the same advanced technology that Fortune 500 companies use to optimize their revenue streams. Our mission is to democratize AI-powered revenue optimization, ensuring that practice owners can focus on patient care while our technology handles the complexities of patient acquisition, conversion, and retention.
+            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Tech Credibility Section */}
-      <section className="py-20 px-6 bg-stone-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ x: -100, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-5xl font-bold text-stone-900 mb-6 leading-tight">
-                WE BUILD
-                <br />
-                <span className="text-blue-600">REVENUE SYSTEMS.</span>
-                <br />
-                WE DEPLOY
-                <br />
-                TECHNOLOGY.
-              </h2>
-            </motion.div>
-            <motion.div
-              initial={{ x: 100, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="space-y-6"
-            >
-              <p className="text-lg text-stone-600">
-                Unlike traditional marketing agencies, we're a technology company that builds and deploys AI-powered revenue optimization systems. We understand the technical architecture needed to convert website visitors into booked patients.
-              </p>
-              
-              {/* Tech Stack Indicators */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                  <Code className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                  <p className="text-sm font-semibold">AI Integration</p>
-                </div>
-                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                  <Database className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                  <p className="text-sm font-semibold">Data Analytics</p>
-                </div>
-                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                  <Monitor className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                  <p className="text-sm font-semibold">System Integration</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Technology Platform Showcase */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
+      {/* Your all-in-one Revenue Engine */}
+      <section className="relative py-20 z-10">
+        <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.div
             initial={{ y: 50, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-16"
           >
-            <h2 className="text-4xl font-bold text-stone-900 mb-6">
-              Enterprise Technology Platform
+            <h2 className="text-5xl font-bold text-white mb-6">
+              Your all-in-one Revenue Engine.
             </h2>
-            <p className="text-lg text-stone-600 max-w-3xl mx-auto">
-              Our proprietary technology stack integrates seamlessly with your practice management system to create a complete revenue optimization engine.
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              AI systems, analytics, and automation — everything you need to optimize and scale your practice revenue, zero hassle.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-12">
-            <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-center p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl"
-            >
-              <div className="mb-6">
-                <div className="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-                  <TrendingUp className="w-12 h-12 text-blue-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-stone-900 mb-2">FOR PRACTICE GROWTH</h3>
-              </div>
-              <blockquote className="text-stone-700 mb-4">
-                "The technology platform they deployed increased our patient bookings by 45% in the first quarter. The AI-powered follow-up system is incredible."
-              </blockquote>
-              <cite className="text-stone-500">
-                Dr. Sarah Chen
-                <br />
-                <span className="text-sm">Practice Owner, Manhattan Dental</span>
-              </cite>
-              <Button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white">
-                <BarChart3 className="mr-2 h-4 w-4" />
-                Deploy Growth Technology
-              </Button>
-            </motion.div>
-
-            <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="text-center p-8 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl"
-            >
-              <div className="mb-6">
-                <div className="w-24 h-24 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-                  <Cpu className="w-12 h-12 text-green-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-stone-900 mb-2">FOR AUTOMATION</h3>
-              </div>
-              <blockquote className="text-stone-700 mb-4">
-                "Their AI system handles everything automatically - from lead capture to appointment booking. It's like having a full marketing team that never sleeps."
-              </blockquote>
-              <cite className="text-stone-500">
-                Dr. Michael Torres
-                <br />
-                <span className="text-sm">Multi-Practice Owner</span>
-              </cite>
-              <Button className="mt-6 bg-green-600 hover:bg-green-700 text-white">
-                <Settings className="mr-2 h-4 w-4" />
-                Automate Your Revenue
-              </Button>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Technology Services */}
-      <section className="py-20 px-6 bg-stone-50">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-4xl font-bold text-stone-900 mb-16 text-center"
-          >
-            Technology Solutions
-          </motion.h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                number: "01",
-                title: "System Architecture",
-                description: "Deploy enterprise-grade revenue stack with AI integration, analytics tracking, and automated workflows.",
-                icon: Database,
-                color: "blue"
+                icon: Shield,
+                title: "Enterprise Security",
+                description: "Bank-grade encryption and HIPAA compliance built-in",
+                color: "from-blue-500 to-cyan-500"
               },
               {
-                number: "02",
-                title: "AI Optimization Engine",
-                description: "Machine learning algorithms that automatically optimize conversion rates and patient engagement.",
                 icon: Cpu,
-                color: "purple"
+                title: "AI-Powered Optimization",
+                description: "Machine learning algorithms that improve performance 24/7",
+                color: "from-purple-500 to-pink-500"
               },
               {
-                number: "03",
-                title: "Performance Analytics",
-                description: "Real-time dashboard with predictive analytics, ROI tracking, and automated reporting systems.",
-                icon: BarChart3,
-                color: "green"
-              },
-              {
-                number: "04",
-                title: "Scaling Infrastructure",
-                description: "Cloud-based systems that automatically scale with practice growth and multi-location expansion.",
-                icon: Monitor,
-                color: "orange"
+                icon: Globe,
+                title: "Seamless Integration",
+                description: "Connect with your existing practice management systems",
+                color: "from-green-500 to-emerald-500"
               }
-            ].map((service, index) => (
+            ].map((feature, index) => (
               <motion.div
-                key={service.number}
+                key={feature.title}
                 initial={{ y: 100, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
+                transition={{ duration: 0.8, delay: index * 0.2 }}
                 viewport={{ once: true }}
-                className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow"
+                className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 hover:border-slate-600/50 transition-all duration-300"
               >
-                <div className="text-6xl font-bold text-stone-200 mb-4 group-hover:text-blue-200 transition-colors">
-                  {service.number}
+                <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-6`}>
+                  <feature.icon className="w-8 h-8 text-white" />
                 </div>
-                <div className="mb-4">
-                  <div className={`w-12 h-12 bg-${service.color}-100 rounded-lg flex items-center justify-center mb-3`}>
-                    <service.icon className={`w-6 h-6 text-${service.color}-600`} />
-                  </div>
-                  <h3 className="text-xl font-semibold text-stone-900 mb-2">
-                    {service.title}
-                  </h3>
-                </div>
-                <p className="text-stone-600">
-                  {service.description}
-                </p>
+                <h3 className="text-xl font-semibold text-white mb-4">{feature.title}</h3>
+                <p className="text-slate-300">{feature.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* About */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Trusted by Leaders */}
+      <section className="relative py-20 z-10">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <h2 className="text-4xl font-bold text-white mb-6">
+              Trusted by practice leaders.
+            </h2>
+            <p className="text-xl text-slate-300">
+              More than 500+ dental practices nationwide already trust our technology.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                metric: "99.99%",
+                label: "Always On, Always Reliable",
+                icon: Clock
+              },
+              {
+                metric: "500+",
+                label: "Practices Powered by Denticor",
+                icon: Users
+              },
+              {
+                metric: "24/7",
+                label: "AI Systems, Real Support",
+                icon: MessageSquare
+              }
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ scale: 0.8, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.8, delay: index * 0.2 }}
+                viewport={{ once: true }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <stat.icon className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-4xl font-bold text-white mb-2">{stat.metric}</div>
+                <div className="text-slate-300">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative py-20 z-10">
+        <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-12"
           >
-            <div className="flex items-center justify-center mb-8">
-              <Database className="w-12 h-12 text-blue-600 mr-4" />
-              <h2 className="text-4xl font-bold text-stone-900">
-                Denticor.
-                <br />
-                <span className="text-stone-500">Technology Company, since 2024</span>
-              </h2>
+            <h2 className="text-4xl font-bold text-white mb-6">
+              Launch with Denticor.
+            </h2>
+            <p className="text-xl text-slate-300 mb-8">
+              Deploy enterprise-grade revenue optimization technology for your practice today.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg">
+                <Database className="mr-2 h-5 w-5" />
+                Deploy Revenue Stack
+              </Button>
+              <Button size="lg" variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-4 text-lg">
+                Learn More
+              </Button>
             </div>
-            <p className="text-lg text-stone-600 mb-8 max-w-2xl mx-auto">
-              Founded by revenue optimization technologists who saw an opportunity to help dental practices succeed by deploying enterprise-grade AI and automation systems.
-            </p>
-            <p className="text-stone-600 mb-8 max-w-3xl mx-auto">
-              We believe in developing technology solutions that understand a practice's unique challenges and growth goals, so that we can serve as a strategic technology partner – helping practices build the automated revenue systems they need to thrive.
-            </p>
-            <Button size="lg" variant="outline" className="border-blue-300 hover:bg-blue-50">
-              <Monitor className="mr-2 h-5 w-5" />
-              Connect with our technology team
-            </Button>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 bg-stone-900 text-white">
-        <div className="max-w-7xl mx-auto text-center">
+      <footer className="relative py-12 z-10 border-t border-slate-700/50">
+        <div className="max-w-7xl mx-auto px-6 text-center">
           <div className="flex items-center justify-center mb-4">
-            <Database className="w-8 h-8 text-blue-400 mr-3" />
-            <div className="text-2xl font-bold">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+              <Database className="w-6 h-6 text-white" />
+            </div>
+            <div className="text-2xl font-bold text-white">
               Denti<span className="text-blue-400">cor</span>
             </div>
           </div>
-          <p className="text-stone-400">
-            New York © 2024 Denticor Technology, Inc.
+          <p className="text-slate-400">
+            © 2024 — DENTICOR TECHNOLOGY, INC. All rights reserved
           </p>
         </div>
       </footer>
